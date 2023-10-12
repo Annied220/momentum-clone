@@ -1,0 +1,13 @@
+@media screen and (min-width: 760px) {
+    h1 {
+        font-size: 10rem;
+    }
+
+    h5{
+        font-size: 3rem;
+    }
+
+    main{
+        gap: 20px;
+    }
+}

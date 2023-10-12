@@ -4,24 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <link rel="stylesheet" href="mediaqueries.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap">
+
+
+    <title>Momentum Clone</title>
 </head>
 <body>
-    <header>
+
+    <main class="main-container">
+        <div class="top-row">
+            <button class="btn btn-links" id="links-btn">Links</button>
+            <div id="weather">
+                <!-- Weather goes here -->
+            </div>
+
+            
+        </div>
+
+        <div class="mid-row">
+            <h1 id="local-time"></h1>
+            <!-- Localtime goes here -->
+            </div>
+
+            <div class="mainfocus-container">
+                <h5>What is your main focus today?</h5>
+                <input type="text" width="350px" id="focus-input">
+            </div>
 
 
-    </header>
+        </div>
 
 
-    <main>
-        <div class="container">
+        <div class="bottom-row">
+            <div class="location" id="location">
+                <!-- Location goes here -->
+            </div>
 
+            <button class="btn btn-links" id="todo-btn">Todo</button>
 
+            <div class="todo-container" id="todo-container">
+                <div class="todo-header">
+                    <h3>Tasks</h3>
+                    <i class="fa-duotone fa-x" id="close-btn" style="color:grey"></i>
+                </div>
+                <div class="todo-content" id="todo-content">
+                    <!-- Todo List goes here -->
+                </div>
+                <div class="todo-footer">
+                    <input type="text" placeholder="New Todo" class="todo-input" id="todo-input">
+                </div>
+               
+            </div>
             
         </div>
 
 
     </main>
-    <script> src="index.js"</script>
+    <script src="index.js"> </script>
 </body>
 </html>
