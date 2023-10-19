@@ -94,7 +94,6 @@ listOfTodo = []
 let listsFromLocalStorage = JSON.parse(localStorage.getItem('mytodolist'))
 
 todoBtn.addEventListener("click", function() {
-    // todoContainer.style.display = 'block';
 
     todoContainer.style.display = 'inline'
 })
@@ -106,14 +105,10 @@ closeBtn.addEventListener("click", function() {
 
 
 
-
-document.getElementById("close-btn").disabled = true;
-
 if (listsFromLocalStorage) {
     listOfTodo = listsFromLocalStorage
     renderLists()
 }
-
 
 
 todoInput.addEventListener('keypress', function (e) {
@@ -131,16 +126,14 @@ todoInput.addEventListener('keypress', function (e) {
     }
 });
 
-// function clearInput() {
-// }
 
 function renderLists() {
     let listItems = ""
     for (let item of listOfTodo) {
          listItems += 
         `
-        <li>
-            <input type="checkbox"><p>${item}</p>
+        <li class="checkbox">
+            <input type="checkbox" id="${item}"><p> ${item}</p>
         </li>
         
         `
@@ -149,4 +142,8 @@ function renderLists() {
     todoContent.innerHTML = listItems
 }
 
+todoContainer.addEventListener('click', highlightCheckedOption)
 
+function highlightCheckedOption(e) {
+    document.getElementById(e.target.id).parentElement.classList.add('highlight')
+}

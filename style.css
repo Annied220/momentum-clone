@@ -154,6 +154,11 @@ div#weather p {
 
 
 /* Todo */
+
+.highlight{
+    text-decoration: line-through;
+    color:grey;
+}
 .bottom-row{
     position: relative;
 }

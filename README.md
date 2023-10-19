@@ -10,3 +10,9 @@ Completed 10/19/2023
 
 Phrase 3: 
 - Configure crossing out the to do item when it is completed
+
+Completed 10/19/2023
+
+Phrase 4;
+- Fine tone
+- Configure Links
