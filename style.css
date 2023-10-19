@@ -1,10 +1,22 @@
-html, body {
-    margin: 0;
-    padding: 0;
-
+*,
+*::after,
+*::before {
+  margin: 0; /*updation*/
+  padding: 0; /*updation*/
+  box-sizing: border-box; /*updation*/
 }
 
+html {
+    height: 100vh; /*updation*/
+    width: 100vw; /*updation*/
+  }
+  
+
 body {
+    height: 100%; /*updation*/
+    width: 100%; /*updation*/
+    display: flex; /*updation*/
+
     background: no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -41,7 +53,9 @@ h5 {
 
 }
 
-
+li {
+    list-style: none;
+}
 
 
 main {
@@ -106,6 +120,7 @@ main {
     font-size: 2rem;
     color:white;
     text-align:center;
+    padding: 0;
  
 }
 
@@ -163,7 +178,7 @@ div#weather p {
 
 .show {
     display:block;
-    transition: all 2s ease-in;
+    transition: all 1s ease-in;
 }
 .todo-input {
     background: 0;

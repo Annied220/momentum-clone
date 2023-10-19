@@ -4,6 +4,7 @@ const weatherEl = document.getElementById('weather')
 const focusInput = document.getElementById('focus-input')
 const linksBtn = document.getElementById('links-btn')
 const todoBtn = document.getElementById('todo-btn')
+let focusInputText; /*updation*/
 
 
 
@@ -85,56 +86,67 @@ navigator.geolocation.getCurrentPosition(position => {
 const todoInput = document.getElementById('todo-input')
 const todoContent = document.getElementById('todo-content')
 const todoContainer = document.getElementById('todo-container')
+const closeBtn = document.getElementById('close-btn')
 
 
+listOfTodo = []
+
+let listsFromLocalStorage = JSON.parse(localStorage.getItem('mytodolist'))
 
 todoBtn.addEventListener("click", function() {
     // todoContainer.style.display = 'block';
 
-    todoContainer.classList.add('show')
+    todoContainer.style.display = 'inline'
 })
+
+closeBtn.addEventListener("click", function() { 
+
+    todoContainer.style.display = 'none'
+})
+
 
 
 
 document.getElementById("close-btn").disabled = true;
 
+if (listsFromLocalStorage) {
+    listOfTodo = listsFromLocalStorage
+    renderLists()
+}
 
 
-
-listOfTodo = []
 
 todoInput.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
+       
+      listOfTodo.push(todoInput.value)
 
-    let focusInputText = todoInput.value
+        todoInput.value = "";
 
-      listOfTodo.push(focusInputText)
       
       localStorage.setItem("mytodolist", JSON.stringify(listOfTodo));
-
       renderLists();
 
-      console.log(localStorage.getItem("mytodolist"));
-
-      clearInput();
 
     }
 });
 
-function clearInput() {
-    focusInputText.textContent = "";
-}
+// function clearInput() {
+// }
 
 function renderLists() {
+    let listItems = ""
     for (let item of listOfTodo) {
-        todoContent.innerHTML += 
+         listItems += 
         `
-        <div>
-        <input type="checkbox"><p>${item}</p>
-        </div>
+        <li>
+            <input type="checkbox"><p>${item}</p>
+        </li>
         
         `
     }
+
+    todoContent.innerHTML = listItems
 }
 
 
