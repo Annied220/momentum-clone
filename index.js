@@ -91,7 +91,7 @@ const closeBtn = document.getElementById('close-btn')
 
 listOfTodo = []
 
-let listsFromLocalStorage = JSON.parse(localStorage.getItem('mytodolist'))
+let todosFromLocalStorage = JSON.parse(localStorage.getItem('mytodolist'))
 
 todoBtn.addEventListener("click", function() {
 
@@ -105,9 +105,9 @@ closeBtn.addEventListener("click", function() {
 
 
 
-if (listsFromLocalStorage) {
-    listOfTodo = listsFromLocalStorage
-    renderLists()
+if (todosFromLocalStorage) {
+    listOfTodo = todosFromLocalStorage
+    renderTodo()
 }
 
 
@@ -120,21 +120,23 @@ todoInput.addEventListener('keypress', function (e) {
 
       
       localStorage.setItem("mytodolist", JSON.stringify(listOfTodo));
-      renderLists();
+      renderTodo();
 
 
     }
 });
 
 
-function renderLists() {
+function renderTodo() {
     let listItems = ""
     for (let item of listOfTodo) {
          listItems += 
         `
+        <ul>
         <li class="checkbox">
             <input type="checkbox" id="${item}"><p> ${item}</p>
         </li>
+        </ul>
         
         `
     }
@@ -147,3 +149,58 @@ todoContainer.addEventListener('click', highlightCheckedOption)
 function highlightCheckedOption(e) {
     document.getElementById(e.target.id).parentElement.classList.add('highlight')
 }
+
+// Links
+
+
+const linksInput = document.getElementById('links-input')
+const linksContent = document.getElementById('links-content')
+const linksContainer = document.getElementById('links-container')
+const linkscloseBtn = document.getElementById('links-close-btn')
+
+linksBtn.addEventListener('click', function() {
+    linksContainer.style.display = 'inline'
+})
+
+linkscloseBtn.addEventListener('click', function() {
+    linksContainer.style.display = 'none'
+
+})
+
+listofLinks = []
+
+let linksFromLocalStorage = JSON.parse(localStorage.getItem('mylinkslist'))
+
+if (linksFromLocalStorage) {
+    listofLinks = linksFromLocalStorage
+    renderLinks
+}
+
+
+linksInput.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        listofLinks.push(linksInput.value)
+        linksInput.value = ""
+
+        localStorage.setItem('mylinkslist', JSON.stringify(listofLinks))
+        
+
+        renderLinks()
+
+    }
+  }  ) 
+
+function renderLinks() {
+    let linksItem = ""
+    for (let link of listofLinks) {
+        linksItem += 
+        `
+        <a href="${link}">${link}</a>
+        `
+    }
+    linksContent.innerHTML = linksItem
+
+}
+
+
+

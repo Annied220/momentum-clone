@@ -153,7 +153,11 @@ div#weather p {
 }
 
 
-/* Todo */
+/* Todo - Links */
+
+.fa-x {
+    cursor: pointer;
+}
 
 .highlight{
     text-decoration: line-through;
@@ -163,13 +167,16 @@ div#weather p {
     position: relative;
 }
 
+.todo {
+    right:0;
+    bottom: 50px;
+}
 
-.todo-container {
+
+.popup-container {
     background-color:white;
     width: 330px;
     position: absolute;
-    right:0;
-    bottom: 50px;;
     margin-bottom: auto;
     display: flex;
     gap: 5px;
@@ -181,11 +188,12 @@ div#weather p {
     display: none;
 }
 
+
 .show {
-    display:block;
+    display:inline;
     transition: all 1s ease-in;
 }
-.todo-input {
+.todo-input, .links-input {
     background: 0;
     border: none;
     outline: none;
@@ -207,11 +215,24 @@ div#weather p {
     
 }
 
-.todo-content {
+.todo-content, .links-content {
     display:flex;
     flex-direction: column;;
 }
 
 .todo-header i {
     text-decoration: none;
+}
+
+.links {
+    top: 90px;
+    left: 0;
+    margin-left: 10px;
+
+}
+
+.links-header {
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
 }

@@ -16,6 +16,20 @@
     <main class="main-container">
         <div class="top-row">
             <button class="btn btn-links" id="links-btn">Links</button>
+
+            <div class="popup-container links" id="links-container">
+                <div class="links-header">
+                    <h3>Bookmarks</h3>
+                    <i class="fa-duotone fa-x" id="links-close-btn" style="color:grey"></i>
+                </div>
+                <div class="links-content" id="links-content">
+                    <!-- Links goes here -->
+                </div>
+                <div class="links-footer">
+                    <input type="text" placeholder="Add Bookmarks" class="links-input" id="links-input">
+                </div>
+               
+            </div>
             <div id="weather">
                 <!-- Weather goes here -->
             </div>
@@ -44,7 +58,7 @@
 
             <button class="btn btn-links" id="todo-btn">Todo</button>
 
-            <div class="todo-container" id="todo-container">
+            <div class="popup-container todo" id="todo-container">
                 <div class="todo-header">
                     <h3>Tasks</h3>
                     <i class="fa-duotone fa-x" id="close-btn" style="color:grey"></i>

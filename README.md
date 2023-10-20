@@ -14,5 +14,9 @@ Phrase 3:
 Completed 10/19/2023
 
 Phrase 4;
-- Fine tone
-- Configure Links
+- Fix bugs:
+    - Duplicate to do list items. - Need to be fixed with function clear
+    - After a click at the close btn, it adds a highlight class to closebtn as well. because of
+    parentElements. - Need to be fixed. 
+
+- Configure Links -- partially done 10/20/23
