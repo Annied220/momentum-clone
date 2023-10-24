@@ -185,7 +185,6 @@ div#weather p {
     color:black;
     border-radius: 5px;;
     padding: 10px;
-    display: none;
 }
 
 
@@ -210,6 +209,14 @@ div#weather p {
     margin-left: 3px;
 }
 
+#todo-container {
+    display: none;
+}
+
+#links-container {
+    display: none;
+}
+
 .todo-footer{
     margin-top: 5px;
     
@@ -231,8 +238,18 @@ div#weather p {
 
 }
 
+.a-links {
+    text-decoration: none;
+    font-size: 1rem;
+    color: grey;
+}
+
 .links-header {
     display:flex;
     flex-direction: row;
     justify-content: space-between;
+}
+
+.checkbox input {
+    filter: saturate(30%);
 }

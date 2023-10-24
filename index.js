@@ -7,9 +7,6 @@ const todoBtn = document.getElementById('todo-btn')
 let focusInputText; /*updation*/
 
 
-
-
-
 // Background Image
 fetch ("https://apis.scrimba.com/unsplash/photos/random?orientation=landscape&query=nature")
     .then (res => res.json())
@@ -53,7 +50,7 @@ navigator.geolocation.getCurrentPosition(position => {
         })
         .then (data => {
 
-            const iconUrl = `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`
+            const iconUrl = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`
 
            
             weatherEl.innerHTML = 
@@ -85,24 +82,35 @@ navigator.geolocation.getCurrentPosition(position => {
 
 const todoInput = document.getElementById('todo-input')
 const todoContent = document.getElementById('todo-content')
+const todoListElement = document.querySelector('#todo-content ul')
 const todoContainer = document.getElementById('todo-container')
 const closeBtn = document.getElementById('close-btn')
 
+
+// function clickedOutside(element, e) {
+//     return !(element == e.target ||
+//     element.contains(e.target))
+// }
+
+// document.addEventListener('click', (e) => {
+//     if (clickedOutside(todoContainer, e)) {
+//         hideTodos()
+//     }
+// })
+
+todoContainer.addEventListener('click', (e)=>{
+    if (e.target == todoContainer) hideTodos()
+})
 
 listOfTodo = []
 
 let todosFromLocalStorage = JSON.parse(localStorage.getItem('mytodolist'))
 
-todoBtn.addEventListener("click", function() {
+todoBtn.addEventListener("click", showTodos)
+closeBtn.addEventListener("click", hideTodos)
 
-    todoContainer.style.display = 'inline'
-})
-
-closeBtn.addEventListener("click", function() { 
-
-    todoContainer.style.display = 'none'
-})
-
+function showTodos() {todoContainer.style.display = 'inline'}
+function hideTodos() {todoContainer.style.display = 'none'}
 
 
 if (todosFromLocalStorage) {
@@ -126,28 +134,57 @@ todoInput.addEventListener('keypress', function (e) {
     }
 });
 
-
+/*
 function renderTodo() {
     let listItems = ""
     for (let item of listOfTodo) {
          listItems += 
-        `
-        <ul>
-        <li class="checkbox">
-            <input type="checkbox" id="${item}"><p> ${item}</p>
-        </li>
-        </ul>
-        
-        `
+            `
+            <ul>
+                <li class="checkbox">
+                    <input type="checkbox" id="${item}"><p> ${item}</p>
+                </li>
+            </ul>
+            
+            `
     }
-
     todoContent.innerHTML = listItems
 }
+*/
 
-todoContainer.addEventListener('click', highlightCheckedOption)
+function renderTodo() {
+    todoListElement.innerHTML = ""
+    listOfTodo.forEach((item, i) => {
+        // creating elements
+        let li = document.createElement('li')
+        let input = document.createElement('input')
+        let p = document.createElement('p')
 
-function highlightCheckedOption(e) {
-    document.getElementById(e.target.id).parentElement.classList.add('highlight')
+        //  modify elements
+        li.classList.add('checkbox')
+        input.setAttribute('type', 'checkbox')
+        input.id = "todo-"+i
+        p.innerText = item
+        input.addEventListener('click', ()=>{highlightCheckedOption(input, li)})
+
+        // appending elements
+        li.append(input)
+        li.append(p)
+        todoListElement.append(li)
+    })
+
+}
+
+// todoContainer.addEventListener('click', highlightCheckedOption)
+
+function highlightCheckedOption(input, li) {
+    // document.getElementById(e.target.id).parentElement.classList.add('highlight')
+    // e.target.classList.toggle('highlight')
+    if (input.checked) {
+        li.classList.add('highlight')
+    } else {
+        li.classList.remove('highlight')
+    }
 }
 
 // Links
@@ -195,7 +232,7 @@ function renderLinks() {
     for (let link of listofLinks) {
         linksItem += 
         `
-        <a href="${link}">${link}</a>
+        <a href="${link}" class="a-links">${link}</a>
         `
     }
     linksContent.innerHTML = linksItem
