@@ -250,6 +250,11 @@ div#weather p {
     justify-content: space-between;
 }
 
+.checkbox {
+    display:flex;
+    flex-direction: row;
+}
+
 .checkbox input {
     filter: saturate(30%);
 }

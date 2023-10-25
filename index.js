@@ -98,19 +98,33 @@ const closeBtn = document.getElementById('close-btn')
 //     }
 // })
 
-todoContainer.addEventListener('click', (e)=>{
-    if (e.target == todoContainer) hideTodos()
-})
+// todoContainer.addEventListener('click', (e)=>{
+//     if (e.target == todoContainer) hideTodos()
+// })
 
-listOfTodo = []
-
-let todosFromLocalStorage = JSON.parse(localStorage.getItem('mytodolist'))
-
+// HIDE AND SHOW POPUP FOR TODO
 todoBtn.addEventListener("click", showTodos)
 closeBtn.addEventListener("click", hideTodos)
 
 function showTodos() {todoContainer.style.display = 'inline'}
 function hideTodos() {todoContainer.style.display = 'none'}
+
+todoContainer.addEventListener('click', toggleHideShow)
+
+function toggleHideShow() {
+    if (todoContainer.style.display === "none") {
+        todoContainer.style.display = "block";
+      } else {
+        todoContainer.style.display = "none";
+      }
+}
+
+//ADD LIST ITEM FOR TODO
+
+listOfTodo = []
+
+let todosFromLocalStorage = JSON.parse(localStorage.getItem('mytodolist'))
+
 
 
 if (todosFromLocalStorage) {
@@ -167,6 +181,7 @@ function renderTodo() {
         p.innerText = item
         input.addEventListener('click', ()=>{highlightCheckedOption(input, li)})
 
+        input.addEventListener("mouseover", () => showMore);
         // appending elements
         li.append(input)
         li.append(p)
@@ -185,6 +200,10 @@ function highlightCheckedOption(input, li) {
     } else {
         li.classList.remove('highlight')
     }
+}
+
+function showMore() {
+
 }
 
 // Links
@@ -210,7 +229,7 @@ let linksFromLocalStorage = JSON.parse(localStorage.getItem('mylinkslist'))
 
 if (linksFromLocalStorage) {
     listofLinks = linksFromLocalStorage
-    renderLinks
+    renderLinks()
 }
 
 
@@ -227,16 +246,35 @@ linksInput.addEventListener('keypress', function (e) {
     }
   }  ) 
 
-function renderLinks() {
-    let linksItem = ""
-    for (let link of listofLinks) {
-        linksItem += 
-        `
-        <a href="${link}" class="a-links">${link}</a>
-        `
-    }
-    linksContent.innerHTML = linksItem
+// function renderLinks() {
+//     let linksItem = ""
+//     for (let link of listofLinks) {
+//         linksItem += 
+//         `
+//         <a href="${link}" class="a-links">${link}</a>
+//         `
+//     }
+//     linksContent.innerHTML = linksItem
 
+// }
+
+function renderLinks() {
+    linksElement.innerHTML = ""
+    listofLinks.forEach((item,i) => {
+        //Create Element
+        let li = document.createElement('li')
+        let a = document.createElement('a')
+
+        //Modify Element
+        li.id = "todo-"+i
+        a.textContent = item
+
+
+        //Append Element
+        li.append(a)
+        linksElement.append(li)
+
+    })
 }
 
 
