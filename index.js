@@ -20,9 +20,9 @@ fetch ("https://apis.scrimba.com/unsplash/photos/random?orientation=landscape&qu
         if (theCity === null) {
              locationEl.innerHTML = `<span class="small">${theCountry}</span>`
         } else if (theCountry === null) {
-            locationEl.innerHTML = `Unknown`
+            locationEl.textContent = "Unknown"
         } else if (theCity === null || theCountry === null ) {
-            locationEl.innerHTML = `Unknown`
+            locationEl.textContent = "Unknown"
         }
         else {
             locationEl.innerHTML = `<span class="small">${theCity}, ${theCountry}</span>`
