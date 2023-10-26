@@ -7,6 +7,24 @@ const todoBtn = document.getElementById('todo-btn')
 let focusInputText; /*updation*/
 
 
+// Todo
+
+const todoInput = document.getElementById('todo-input')
+const todoContent = document.getElementById('todo-content')
+const todoListElement = document.querySelector('#todo-content ul')
+const todoContainer = document.getElementById('todo-container')
+const closeBtn = document.getElementById('close-btn')
+
+
+// Links
+
+const linksInput = document.getElementById('links-input')
+const linksContent = document.getElementById('links-content')
+const linksContainer = document.getElementById('links-container')
+const linkscloseBtn = document.getElementById('links-close-btn')
+const linksElement = document.getElementById('links-content')
+
+
 // Background Image
 fetch ("https://apis.scrimba.com/unsplash/photos/random?orientation=landscape&query=nature")
     .then (res => res.json())
@@ -31,12 +49,10 @@ fetch ("https://apis.scrimba.com/unsplash/photos/random?orientation=landscape&qu
 
 // Local Time
 const date = new Date()
-
 timeEl.textContent = `${date.toLocaleTimeString("en-us",{timeStyle: "short"})}`
 
 
 // Weather
-
 navigator.geolocation.getCurrentPosition(position => {
     let lon = position.coords.longitude;
     let lat = position.coords.latitude;
@@ -66,58 +82,25 @@ navigator.geolocation.getCurrentPosition(position => {
 
         })
         .catch(err => console.error(err))
-  });
+});
 
 
 // Focus
 
-    focusInput.addEventListener('keypress', function (e) {
+focusInput.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         const focusInputText = focusInput.value
       console.log(focusInput.value)
     }
 });
 
-// Todo
-
-const todoInput = document.getElementById('todo-input')
-const todoContent = document.getElementById('todo-content')
-const todoListElement = document.querySelector('#todo-content ul')
-const todoContainer = document.getElementById('todo-container')
-const closeBtn = document.getElementById('close-btn')
 
 
-// function clickedOutside(element, e) {
-//     return !(element == e.target ||
-//     element.contains(e.target))
-// }
-
-// document.addEventListener('click', (e) => {
-//     if (clickedOutside(todoContainer, e)) {
-//         hideTodos()
-//     }
-// })
-
-// todoContainer.addEventListener('click', (e)=>{
-//     if (e.target == todoContainer) hideTodos()
-// })
-
-// HIDE AND SHOW POPUP FOR TODO
-todoBtn.addEventListener("click", showTodos)
 closeBtn.addEventListener("click", hideTodos)
 
-function showTodos() {todoContainer.style.display = 'inline'}
-function hideTodos() {todoContainer.style.display = 'none'}
 
-todoContainer.addEventListener('click', toggleHideShow)
+todoBtn.addEventListener('click', toggleHideShow)
 
-function toggleHideShow() {
-    if (todoContainer.style.display === "none") {
-        todoContainer.style.display = "block";
-      } else {
-        todoContainer.style.display = "none";
-      }
-}
 
 //ADD LIST ITEM FOR TODO
 
@@ -135,37 +118,31 @@ if (todosFromLocalStorage) {
 
 todoInput.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
-       
-      listOfTodo.push(todoInput.value)
-
+        
+        listOfTodo.push(todoInput.value)
+        
         todoInput.value = "";
 
-      
-      localStorage.setItem("mytodolist", JSON.stringify(listOfTodo));
-      renderTodo();
-
-
+        
+        localStorage.setItem("mytodolist", JSON.stringify(listOfTodo));
+        renderTodo();
+        
+        
     }
 });
 
-/*
-function renderTodo() {
-    let listItems = ""
-    for (let item of listOfTodo) {
-         listItems += 
-            `
-            <ul>
-                <li class="checkbox">
-                    <input type="checkbox" id="${item}"><p> ${item}</p>
-                </li>
-            </ul>
-            
-            `
-    }
-    todoContent.innerHTML = listItems
-}
-*/
 
+
+function showTodos() {todoContainer.style.display = 'inline'}
+function hideTodos() {todoContainer.style.display = 'none'}
+function toggleHideShow() {
+    if (todoContainer.style.display === "none"
+        || todoContainer.style.display === "") {
+        todoContainer.style.display = "block";
+      } else {
+        todoContainer.style.display = "none";
+      }
+}
 function renderTodo() {
     todoListElement.innerHTML = ""
     listOfTodo.forEach((item, i) => {
@@ -206,13 +183,6 @@ function showMore() {
 
 }
 
-// Links
-
-
-const linksInput = document.getElementById('links-input')
-const linksContent = document.getElementById('links-content')
-const linksContainer = document.getElementById('links-container')
-const linkscloseBtn = document.getElementById('links-close-btn')
 
 linksBtn.addEventListener('click', function() {
     linksContainer.style.display = 'inline'
@@ -225,10 +195,10 @@ linkscloseBtn.addEventListener('click', function() {
 
 listofLinks = []
 
-let linksFromLocalStorage = JSON.parse(localStorage.getItem('mylinkslist'))
+let linksFromLocalStorage = localStorage.getItem('mylinkslist')
 
 if (linksFromLocalStorage) {
-    listofLinks = linksFromLocalStorage
+    listofLinks = JSON.parse(linksFromLocalStorage)
     renderLinks()
 }
 
@@ -246,17 +216,7 @@ linksInput.addEventListener('keypress', function (e) {
     }
   }  ) 
 
-// function renderLinks() {
-//     let linksItem = ""
-//     for (let link of listofLinks) {
-//         linksItem += 
-//         `
-//         <a href="${link}" class="a-links">${link}</a>
-//         `
-//     }
-//     linksContent.innerHTML = linksItem
 
-// }
 
 function renderLinks() {
     linksElement.innerHTML = ""
