@@ -20,3 +20,7 @@ Phrase 4;
     parentElements. - Need to be fixed. 
 
 - Configure Links -- partially done 10/20/23
+
+Phrase 5: 
+
+- add eventlistener to the whole doc. 

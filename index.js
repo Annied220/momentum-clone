@@ -7,7 +7,22 @@ const todoBtn = document.getElementById('todo-btn')
 let focusInputText; /*updation*/
 
 
+// Todo
 
+const todoInput = document.getElementById('todo-input')
+const todoContent = document.getElementById('todo-content')
+const todoListElement = document.querySelector('#todo-content ul')
+const todoContainer = document.getElementById('todo-container')
+const closeBtn = document.getElementById('close-btn')
+
+
+// Links
+
+const linksInput = document.getElementById('links-input')
+const linksContent = document.getElementById('links-content')
+const linksContainer = document.getElementById('links-container')
+const linkscloseBtn = document.getElementById('links-close-btn')
+const linksElement = document.getElementById('links-content')
 
 
 // Background Image
@@ -23,9 +38,9 @@ fetch ("https://apis.scrimba.com/unsplash/photos/random?orientation=landscape&qu
         if (theCity === null) {
              locationEl.innerHTML = `<span class="small">${theCountry}</span>`
         } else if (theCountry === null) {
-            locationEl.innerHTML = `Unknown`
+            locationEl.textContent = "Unknown"
         } else if (theCity === null || theCountry === null ) {
-            locationEl.innerHTML = `Unknown`
+            locationEl.textContent = "Unknown"
         }
         else {
             locationEl.innerHTML = `<span class="small">${theCity}, ${theCountry}</span>`
@@ -34,12 +49,10 @@ fetch ("https://apis.scrimba.com/unsplash/photos/random?orientation=landscape&qu
 
 // Local Time
 const date = new Date()
-
 timeEl.textContent = `${date.toLocaleTimeString("en-us",{timeStyle: "short"})}`
 
 
 // Weather
-
 navigator.geolocation.getCurrentPosition(position => {
     let lon = position.coords.longitude;
     let lat = position.coords.latitude;
@@ -53,7 +66,7 @@ navigator.geolocation.getCurrentPosition(position => {
         })
         .then (data => {
 
-            const iconUrl = `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`
+            const iconUrl = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`
 
            
             weatherEl.innerHTML = 
@@ -69,39 +82,31 @@ navigator.geolocation.getCurrentPosition(position => {
 
         })
         .catch(err => console.error(err))
-  });
+});
 
 
 // Focus
 
-    focusInput.addEventListener('keypress', function (e) {
+focusInput.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         const focusInputText = focusInput.value
       console.log(focusInput.value)
     }
 });
 
-// Todo
 
-const todoInput = document.getElementById('todo-input')
-const todoContent = document.getElementById('todo-content')
-const todoContainer = document.getElementById('todo-container')
-const closeBtn = document.getElementById('close-btn')
 
+closeBtn.addEventListener("click", hideTodos)
+
+
+todoBtn.addEventListener('click', toggleHideShow)
+
+
+//ADD LIST ITEM FOR TODO
 
 listOfTodo = []
 
 let todosFromLocalStorage = JSON.parse(localStorage.getItem('mytodolist'))
-
-todoBtn.addEventListener("click", function() {
-
-    todoContainer.style.display = 'inline'
-})
-
-closeBtn.addEventListener("click", function() { 
-
-    todoContainer.style.display = 'none'
-})
 
 
 
@@ -113,50 +118,71 @@ if (todosFromLocalStorage) {
 
 todoInput.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
-       
-      listOfTodo.push(todoInput.value)
-
+        
+        listOfTodo.push(todoInput.value)
+        
         todoInput.value = "";
 
-      
-      localStorage.setItem("mytodolist", JSON.stringify(listOfTodo));
-      renderTodo();
-
-
+        
+        localStorage.setItem("mytodolist", JSON.stringify(listOfTodo));
+        renderTodo();
+        
+        
     }
 });
 
 
+
+function showTodos() {todoContainer.style.display = 'inline'}
+function hideTodos() {todoContainer.style.display = 'none'}
+function toggleHideShow() {
+    if (todoContainer.style.display === "none"
+        || todoContainer.style.display === "") {
+        todoContainer.style.display = "block";
+      } else {
+        todoContainer.style.display = "none";
+      }
+}
 function renderTodo() {
-    let listItems = ""
-    for (let item of listOfTodo) {
-         listItems += 
-        `
-        <ul>
-        <li class="checkbox">
-            <input type="checkbox" id="${item}"><p> ${item}</p>
-        </li>
-        </ul>
-        
-        `
+    todoListElement.innerHTML = ""
+    listOfTodo.forEach((item, i) => {
+        // creating elements
+        let li = document.createElement('li')
+        let input = document.createElement('input')
+        let p = document.createElement('p')
+
+        //  modify elements
+        li.classList.add('checkbox')
+        input.setAttribute('type', 'checkbox')
+        input.id = "todo-"+i
+        p.innerText = item
+        input.addEventListener('click', ()=>{highlightCheckedOption(input, li)})
+
+        input.addEventListener("mouseover", () => showMore);
+        // appending elements
+        li.append(input)
+        li.append(p)
+        todoListElement.append(li)
+    })
+
+}
+
+// todoContainer.addEventListener('click', highlightCheckedOption)
+
+function highlightCheckedOption(input, li) {
+    // document.getElementById(e.target.id).parentElement.classList.add('highlight')
+    // e.target.classList.toggle('highlight')
+    if (input.checked) {
+        li.classList.add('highlight')
+    } else {
+        li.classList.remove('highlight')
     }
-
-    todoContent.innerHTML = listItems
 }
 
-todoContainer.addEventListener('click', highlightCheckedOption)
+function showMore() {
 
-function highlightCheckedOption(e) {
-    document.getElementById(e.target.id).parentElement.classList.add('highlight')
 }
 
-// Links
-
-
-const linksInput = document.getElementById('links-input')
-const linksContent = document.getElementById('links-content')
-const linksContainer = document.getElementById('links-container')
-const linkscloseBtn = document.getElementById('links-close-btn')
 
 linksBtn.addEventListener('click', function() {
     linksContainer.style.display = 'inline'
@@ -169,11 +195,11 @@ linkscloseBtn.addEventListener('click', function() {
 
 listofLinks = []
 
-let linksFromLocalStorage = JSON.parse(localStorage.getItem('mylinkslist'))
+let linksFromLocalStorage = localStorage.getItem('mylinkslist')
 
 if (linksFromLocalStorage) {
-    listofLinks = linksFromLocalStorage
-    renderLinks
+    listofLinks = JSON.parse(linksFromLocalStorage)
+    renderLinks()
 }
 
 
@@ -190,16 +216,25 @@ linksInput.addEventListener('keypress', function (e) {
     }
   }  ) 
 
-function renderLinks() {
-    let linksItem = ""
-    for (let link of listofLinks) {
-        linksItem += 
-        `
-        <a href="${link}">${link}</a>
-        `
-    }
-    linksContent.innerHTML = linksItem
 
+
+function renderLinks() {
+    linksElement.innerHTML = ""
+    listofLinks.forEach((item,i) => {
+        //Create Element
+        let li = document.createElement('li')
+        let a = document.createElement('a')
+
+        //Modify Element
+        li.id = "todo-"+i
+        a.textContent = item
+
+
+        //Append Element
+        li.append(a)
+        linksElement.append(li)
+
+    })
 }
 
 
