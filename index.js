@@ -19,10 +19,9 @@ const closeBtn = document.getElementById('close-btn')
 // Links
 
 const linksInput = document.getElementById('links-input')
-const linksContent = document.getElementById('links-content')
 const linksContainer = document.getElementById('links-container')
 const linkscloseBtn = document.getElementById('links-close-btn')
-const linksElement = document.getElementById('links-content')
+const linksElement = document.getElementById('links-element')
 
 
 // Background Image
@@ -95,13 +94,6 @@ focusInput.addEventListener('keypress', function (e) {
 });
 
 
-
-closeBtn.addEventListener("click", hideTodos)
-
-
-todoBtn.addEventListener('click', toggleHideShow)
-
-
 //ADD LIST ITEM FOR TODO
 
 listOfTodo = []
@@ -131,16 +123,22 @@ todoInput.addEventListener('keypress', function (e) {
     }
 });
 
+//Show Todo
+
+closeBtn.addEventListener("click", hideTodos)
+
+
+todoBtn.addEventListener('click', ()=>{toggleHideShow(todoContainer)})
 
 
 function showTodos() {todoContainer.style.display = 'inline'}
 function hideTodos() {todoContainer.style.display = 'none'}
-function toggleHideShow() {
-    if (todoContainer.style.display === "none"
-        || todoContainer.style.display === "") {
-        todoContainer.style.display = "block";
+function toggleHideShow(container) {
+    if (container.style.display === "none"
+        || container.style.display === "") {
+        container.style.display = "block";
       } else {
-        todoContainer.style.display = "none";
+        container.style.display = "none";
       }
 }
 function renderTodo() {
@@ -167,8 +165,6 @@ function renderTodo() {
 
 }
 
-// todoContainer.addEventListener('click', highlightCheckedOption)
-
 function highlightCheckedOption(input, li) {
     // document.getElementById(e.target.id).parentElement.classList.add('highlight')
     // e.target.classList.toggle('highlight')
@@ -179,14 +175,11 @@ function highlightCheckedOption(input, li) {
     }
 }
 
-function showMore() {
-
-}
+// Show Links
 
 
-linksBtn.addEventListener('click', function() {
-    linksContainer.style.display = 'inline'
-})
+linksBtn.addEventListener('click', () => {toggleHideShow(linksContainer)})
+
 
 linkscloseBtn.addEventListener('click', function() {
     linksContainer.style.display = 'none'
