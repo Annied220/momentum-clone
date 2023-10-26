@@ -244,6 +244,11 @@ div#weather p {
     color: grey;
 }
 
+.a-links:hover {
+    text-decoration:underline;
+    color: blue;
+}
+
 .links-header {
     display:flex;
     flex-direction: row;
@@ -257,4 +262,21 @@ div#weather p {
 
 .checkbox input {
     filter: saturate(30%);
+}
+.list-btn {
+    padding: 5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border:none;
+    justify-self: flex-end;
+    cursor:pointer;
+}
+.list-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.fa-x {
+    size: 15px;
 }

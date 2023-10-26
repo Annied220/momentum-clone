@@ -190,6 +190,8 @@ listofLinks = []
 
 let linksFromLocalStorage = localStorage.getItem('mylinkslist')
 
+console.log(linksFromLocalStorage)
+
 if (linksFromLocalStorage) {
     listofLinks = JSON.parse(linksFromLocalStorage)
     renderLinks()
@@ -217,11 +219,43 @@ function renderLinks() {
         //Create Element
         let li = document.createElement('li')
         let a = document.createElement('a')
+        let moreBtn = document.createElement('button')
+        let icon = document.createElement('i')
 
         //Modify Element
         li.id = "todo-"+i
+        li.classList.add('list-row')
         a.textContent = item
+        a.setAttribute('href', item)
+        a.classList.add('a-links')
+        moreBtn.classList.add('list-btn')
+        icon.classList.add('fa-x')
+        console.log(li.id.slice(-1))
 
+
+        //Add Hover for li - Need some conditioning
+
+        li.addEventListener('mouseover', () => {
+            const hoverId = li.id
+            if(hoverId) {
+                li.append(moreBtn)
+                moreBtn.append(icon)
+
+            } else {
+
+            }
+        })
+
+        //Add Click to moreBtn - remove list item
+
+        moreBtn.addEventListener('click', () => {
+           linksFromLocalStorage.forEach((link, i) => {
+                if (i === li.id.slice(-1)) {
+                    linksFromLocalStorage.splice(i, 1)
+                    renderLinks()
+                }
+           }) 
+        })
 
         //Append Element
         li.append(a)
