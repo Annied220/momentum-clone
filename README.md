@@ -21,6 +21,12 @@ Phrase 4;
 
 - Configure Links -- partially done 10/20/23
 
+Completed 10/29/2023
+
 Phrase 5: 
 
-- add eventlistener to the whole doc. 
+- Add footer to Todo: All, Completed, Deleted
+
+
+Phrase 6:
+- Configure focus . setTimeout()

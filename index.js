@@ -33,14 +33,15 @@ fetch ("https://apis.scrimba.com/unsplash/photos/random?orientation=landscape&qu
 
         const theCity = data.location.city;
         const theCountry = data.location.country;
-
-        if (theCity === null) {
-             locationEl.innerHTML = `<span class="small">${theCountry}</span>`
-        } else if (theCountry === null) {
-            locationEl.textContent = "Unknown"
-        } else if (theCity === null || theCountry === null ) {
-            locationEl.textContent = "Unknown"
-        }
+        console.log(`
+            theCity: ${theCity}
+            theCountry: ${theCountry}
+        `)
+        if (theCity === null && theCountry === null) {
+            locationEl.innerHTML = `<span class="small">Unknown</span>`
+        } else if (theCity === null) {
+            locationEl.innerHTML = `<span class="small">${theCountry}</span>`
+        } 
         else {
             locationEl.innerHTML = `<span class="small">${theCity}, ${theCountry}</span>`
         }
@@ -72,7 +73,7 @@ navigator.geolocation.getCurrentPosition(position => {
             `
                 <div class="icon-row">
                     <img src=${iconUrl} width="60px"/>
-                    <h5>${Math.round(data.main.temp)}°C</h5>
+                    <h5>${Math.round(data.main.temp)}°F</h5>
 
                 </div>
                 <p class="cityname">${data.name}</p>
@@ -95,6 +96,23 @@ focusInput.addEventListener('keypress', function (e) {
 
 
 //ADD LIST ITEM FOR TODO
+// instead of strings, use objects
+/*
+    [
+        'walk the dog',
+        'do the dishes',
+    ]
+
+    [
+        {
+            text: "walk the dog",
+            status: "completed" | "deleted" | undefined
+        },
+        {
+
+        }
+    ]
+*/
 
 listOfTodo = []
 
@@ -116,7 +134,7 @@ todoInput.addEventListener('keypress', function (e) {
         todoInput.value = "";
 
         
-        localStorage.setItem("mytodolist", JSON.stringify(listOfTodo));
+        save('mytodolist')
         renderTodo();
         
         
@@ -141,25 +159,39 @@ function toggleHideShow(container) {
         container.style.display = "none";
       }
 }
-function renderTodo() {
+// "all" | "completed" | "deleted"
+// let filteredTodos = listOfTodo.filter()
+function renderTodo(filter = "all") {
+    // if (filter == "completed")
     todoListElement.innerHTML = ""
     listOfTodo.forEach((item, i) => {
         // creating elements
         let li = document.createElement('li')
         let input = document.createElement('input')
         let p = document.createElement('p')
+        let deleteBtn = document.createElement('button')
+        let icon = document.createElement('i')
 
         //  modify elements
-        li.classList.add('checkbox')
+        li.classList.add('list-row')
         input.setAttribute('type', 'checkbox')
         input.id = "todo-"+i
         p.innerText = item
         input.addEventListener('click', ()=>{highlightCheckedOption(input, li)})
+        deleteBtn.classList.add('list-btn')
+        icon.classList.add('fa-x')
 
-        input.addEventListener("mouseover", () => showMore);
+        deleteBtn.addEventListener('click', () => {
+            listOfTodo.splice(i, 1)
+            save('mytodolist')
+            renderTodo()
+        })
+
         // appending elements
         li.append(input)
         li.append(p)
+        deleteBtn.append(icon)
+        li.append(deleteBtn)
         todoListElement.append(li)
     })
 
@@ -174,6 +206,9 @@ function highlightCheckedOption(input, li) {
         li.classList.remove('highlight')
     }
 }
+
+//Add eventlistener to delete btn
+
 
 // Show Links
 
@@ -203,15 +238,34 @@ linksInput.addEventListener('keypress', function (e) {
         listofLinks.push(linksInput.value)
         linksInput.value = ""
 
-        localStorage.setItem('mylinkslist', JSON.stringify(listofLinks))
+        save('mylinkslist')
         
 
         renderLinks()
 
     }
-  }  ) 
+  }  )
+   
+  // Ternary expressons
+  // condition ? iftrue : else
 
-
+function save(key) {
+    if (key !== 'mylinkslist' && key !== 'mytodolist') {
+        console.error(key + ' is an invalid key')
+        return
+    }
+    /*     
+    localStorage.setItem(key, JSON.stringify(
+        key === 'mylinkslist' ? 
+            listofLinks : listOfTodo
+    )) 
+    */
+    let arrayToSave
+    if (key === 'mylinkslist') {
+        arrayToSave = listofLinks
+    } else arrayToSave = listOfTodo
+    localStorage.setItem(key, JSON.stringify(arrayToSave))
+}
 
 function renderLinks() {
     linksElement.innerHTML = ""
@@ -219,22 +273,20 @@ function renderLinks() {
         //Create Element
         let li = document.createElement('li')
         let a = document.createElement('a')
-        let moreBtn = document.createElement('button')
+        let deleteBtn = document.createElement('button')
         let icon = document.createElement('i')
 
         //Modify Element
-        li.id = "todo-"+i
+        li.id = "link-"+i
         li.classList.add('list-row')
         a.textContent = item
         a.setAttribute('href', item)
         a.classList.add('a-links')
-        moreBtn.classList.add('list-btn')
+        deleteBtn.classList.add('list-btn')
         icon.classList.add('fa-x')
-        console.log(li.id.slice(-1))
-
 
         //Add Hover for li - Need some conditioning
-
+/* 
         li.addEventListener('mouseover', () => {
             const hoverId = li.id
             if(hoverId) {
@@ -244,22 +296,24 @@ function renderLinks() {
             } else {
 
             }
-        })
+        }) */
 
         //Add Click to moreBtn - remove list item
+        // ARRAY.splice(index, numberOfItemsToDelete, replacement*)
 
-        moreBtn.addEventListener('click', () => {
-           linksFromLocalStorage.forEach((link, i) => {
-                if (i === li.id.slice(-1)) {
-                    linksFromLocalStorage.splice(i, 1)
-                    renderLinks()
-                }
-           }) 
+        deleteBtn.addEventListener('click', () => {
+            listofLinks.splice(i, 1)
+            save('mylinkslist')
+            renderLinks()
         })
+
+        // console.log(localStorage.getItem())
 
         //Append Element
         li.append(a)
         linksElement.append(li)
+        deleteBtn.append(icon)
+        li.append(deleteBtn)
 
     })
 }
