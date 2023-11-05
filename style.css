@@ -116,6 +116,7 @@ main {
     border: none;
     border-bottom: 2px solid #fff;
     outline: none;
+    transition: opacity 1s;
 }
 
 

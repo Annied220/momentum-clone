@@ -6,6 +6,7 @@ const linksBtn = document.getElementById('links-btn')
 const todoBtn = document.getElementById('todo-btn')
 let focusInputText;
 
+let focusInputContainer = document.querySelector('.mainfocus-container')
 
 // Todo
 
@@ -16,6 +17,7 @@ const todoContainer = document.getElementById('todo-container')
 const closeBtn = document.getElementById('close-btn')
 const completeTab = document.getElementById('complete-tab')
 const deleteTab = document.getElementById('delete-tab')
+const allTab = document.getElementById('all-tab')
 
 
 
@@ -90,7 +92,26 @@ navigator.geolocation.getCurrentPosition(position => {
 focusInput.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         const focusInputText = focusInput.value
-      console.log(focusInput.value)
+        focusInput.style.opacity = 0
+        setTimeout(() => {
+            focusInput.remove()
+            document.getElementById('focus-question').remove()
+
+            //Create element
+            let messageElement = document.createElement('div')
+            let header = document.createElement('h5')
+
+            //Modify element
+            header = "Today your focus is"
+            messageElement.style.opacity = 0
+            messageElement.style.transition = 'opacity 1s'
+            messageElement.innerText = focusInputText
+
+            //Append element
+            messageElement.append(header)
+            focusInputContainer.append(messageElement)
+            setTimeout(() => {messageElement.style.opacity = 1})
+        }, 1000);
     }
 });
 
@@ -135,15 +156,11 @@ function toggleHideShow(container) {
 //Todo Functionality
 
 listOfTodo = []
-
-let todosFromLocalStorage = JSON.parse(localStorage.getItem('mytodolist'))
-
-
+let todosFromLocalStorage = localStorage.getItem('mytodolist')
 if (todosFromLocalStorage) {
-    listOfTodo = todosFromLocalStorage
+    listOfTodo = JSON.parse(todosFromLocalStorage)
     renderTodo()
 }
-
 
 todoInput.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
@@ -153,7 +170,8 @@ todoInput.addEventListener('keypress', function (e) {
             todoitem: todoInput.value,
             all: true,
             completed: false,
-            deleted: false
+            deleted: false,
+            id: Math.random()
         })
         
         todoInput.value = "";
@@ -165,33 +183,33 @@ todoInput.addEventListener('keypress', function (e) {
 });
 
 completeTab.addEventListener('click', () => {
-    renderTodo(completedTodoItems)
+    renderTodo('completed')
 })
 
 deleteTab.addEventListener('click', () => {
-renderTodo()
+    renderTodo('deleted')
 })
-
+allTab.addEventListener('click', ()=>{
+    renderTodo()
+})
 // "all" | "completed" | "deleted"
 // let filteredTodos = listOfTodo.filter()
-let completedTodoItems = listOfTodo.filter((todo) => {
-    if(todo.completed) {
-        return completedTodoItems
-    }
-})
 
-let deletedTodoItems = listOfTodo.filter((todo) => {
-    if(todo.deleted) {
-        return deletedTodoItems
-    }
-})
-function renderTodo(filter = "all") {
+
+function renderTodo(filter) {
     // if (filter == "completed")
+    let filteredTodos = [...listOfTodo] // Make a copy of an array
+
+    //Just filter the copy, because we dont want to lose the original array
     if(filter == "completed") {
-        listOfTodo = completedTodoItems
+        filteredTodos = listOfTodo.filter(todo => todo.completed)
+    } else if (filter == 'deleted') {
+        filteredTodos = listOfTodo.filter(todo => todo.deleted)
+    } else {
+        filteredTodos = listOfTodo.filter(todo => !todo.deleted)
     }
     todoListElement.innerHTML = ""
-    listOfTodo.forEach((item, i) => {
+    filteredTodos.forEach((item, i) => {
         // creating elements
         let li = document.createElement('li')
         let input = document.createElement('input')
@@ -205,13 +223,18 @@ function renderTodo(filter = "all") {
         input.setAttribute('value', item.todoitem)
         input.id = "todo-"+i
         p.innerText = item.todoitem
+        if (item.completed) {
+            input.checked = 'on'
+            checkedOption(input, li, item)
+        }
         input.addEventListener('click', ()=>{checkedOption(input, li, item)})
         deleteBtn.classList.add('list-btn')
         icon.classList.add('fa-x')
 
         //Add eventlistener to delete btn
         deleteBtn.addEventListener('click', () => {
-            listOfTodo.splice(i, 1)
+            // listOfTodo.splice(i, 1)
+            listOfTodo[i].deleted = true
             save('mytodolist')
             renderTodo()
         })
@@ -242,20 +265,19 @@ function save(key) {
 
 let listofCheckedItem = []
 
+
 function checkedOption(input, li, item) {
-    // document.getElementById(e.target.id).parentElement.classList.add('highlight')
-    // e.target.classList.toggle('highlight')
+    let i = listOfTodo.findIndex(todo => todo.id == item.id)
     if (input.checked) {
         li.classList.add('highlight')
         //Change complete boolean to true
-        item.completed = true
-        console.log('this box is checked')
+        listOfTodo[i].completed = true
     }
-     else {
-        li.classList.remove('highlight')
-        item.completed = false
-        console.log('this box is unchecked')
+    else {
+    li.classList.remove('highlight')
+        listOfTodo[i].completed = false
     }
+    save('mytodolist')
 }
 
 
@@ -336,7 +358,7 @@ function renderLinks() {
         // ARRAY.splice(index, numberOfItemsToDelete, replacement*)
 
         deleteBtn.addEventListener('click', () => {
-            listofLinks.splice(i, 1)
+            listofLinks[i].deleted = true
             save('mylinkslist')
             renderLinks()
         })
