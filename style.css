@@ -1,21 +1,21 @@
 *,
 *::after,
 *::before {
-  margin: 0; /*updation*/
-  padding: 0; /*updation*/
-  box-sizing: border-box; /*updation*/
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
 }
 
 html {
-    height: 100vh; /*updation*/
-    width: 100vw; /*updation*/
+    height: 100vh; 
+    width: 100vw; 
   }
   
 
 body {
-    height: 100%; /*updation*/
-    width: 100%; /*updation*/
-    display: flex; /*updation*/
+    height: 100%; 
+    width: 100%; 
+    display: flex; 
 
     background: no-repeat center center fixed; 
     -webkit-background-size: cover;
@@ -55,9 +55,12 @@ h5 {
 
 li {
     list-style: none;
+ 
 }
 
-
+i {
+    font-style:normal;
+}
 main {
     width: 98%;
     margin: 10px auto;
@@ -113,6 +116,7 @@ main {
     border: none;
     border-bottom: 2px solid #fff;
     outline: none;
+    transition: opacity 1s;
 }
 
 
@@ -230,7 +234,29 @@ div#weather p {
 .todo-header i {
     text-decoration: none;
 }
+.footer-row{
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 5px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
 
+.todo-footer-links {
+    text-decoration: none;
+    font-size: 1rem;
+    color: grey;
+}
+
+.todo-footer-links:active {
+    color: blue;
+    font-weight: 400;
+   
+}
+
+
+/* Links */
 .links {
     top: 90px;
     left: 0;
@@ -238,10 +264,15 @@ div#weather p {
 
 }
 
-.a-links {
+.a-links{
     text-decoration: none;
     font-size: 1rem;
     color: grey;
+}
+
+.a-links:hover {
+    text-decoration:underline;
+    color: blue;
 }
 
 .links-header {
@@ -250,11 +281,30 @@ div#weather p {
     justify-content: space-between;
 }
 
-.checkbox {
-    display:flex;
-    flex-direction: row;
-}
 
 .checkbox input {
     filter: saturate(30%);
+}
+.list-btn {
+    visibility: hidden;
+    padding: 5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border:none;
+    cursor:pointer;
+}
+
+.list-row {
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+}
+
+.list-row:hover > .list-btn {
+    visibility: visible;
+}
+
+.fa-x {
+    size: 15px;
 }

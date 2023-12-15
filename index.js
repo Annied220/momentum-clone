@@ -4,8 +4,9 @@ const weatherEl = document.getElementById('weather')
 const focusInput = document.getElementById('focus-input')
 const linksBtn = document.getElementById('links-btn')
 const todoBtn = document.getElementById('todo-btn')
-let focusInputText; /*updation*/
+let focusInputText;
 
+let focusInputContainer = document.querySelector('.mainfocus-container')
 
 // Todo
 
@@ -14,15 +15,18 @@ const todoContent = document.getElementById('todo-content')
 const todoListElement = document.querySelector('#todo-content ul')
 const todoContainer = document.getElementById('todo-container')
 const closeBtn = document.getElementById('close-btn')
+const completeTab = document.getElementById('complete-tab')
+const deleteTab = document.getElementById('delete-tab')
+const allTab = document.getElementById('all-tab')
+
 
 
 // Links
 
 const linksInput = document.getElementById('links-input')
-const linksContent = document.getElementById('links-content')
 const linksContainer = document.getElementById('links-container')
 const linkscloseBtn = document.getElementById('links-close-btn')
-const linksElement = document.getElementById('links-content')
+const linksElement = document.getElementById('links-element')
 
 
 // Background Image
@@ -34,14 +38,12 @@ fetch ("https://apis.scrimba.com/unsplash/photos/random?orientation=landscape&qu
 
         const theCity = data.location.city;
         const theCountry = data.location.country;
-
-        if (theCity === null) {
-             locationEl.innerHTML = `<span class="small">${theCountry}</span>`
-        } else if (theCountry === null) {
-            locationEl.textContent = "Unknown"
-        } else if (theCity === null || theCountry === null ) {
-            locationEl.textContent = "Unknown"
-        }
+        
+        if (theCity === null && theCountry === null) {
+            locationEl.innerHTML = `<span class="small">Unknown</span>`
+        } else if (theCity === null) {
+            locationEl.innerHTML = `<span class="small">${theCountry}</span>`
+        } 
         else {
             locationEl.innerHTML = `<span class="small">${theCity}, ${theCountry}</span>`
         }
@@ -73,7 +75,7 @@ navigator.geolocation.getCurrentPosition(position => {
             `
                 <div class="icon-row">
                     <img src=${iconUrl} width="60px"/>
-                    <h5>${Math.round(data.main.temp)}°C</h5>
+                    <h5>${Math.round(data.main.temp)}°F</h5>
 
                 </div>
                 <p class="cityname">${data.name}</p>
@@ -90,103 +92,202 @@ navigator.geolocation.getCurrentPosition(position => {
 focusInput.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         const focusInputText = focusInput.value
-      console.log(focusInput.value)
+        focusInput.style.opacity = 0
+        setTimeout(() => {
+            focusInput.remove()
+            document.getElementById('focus-question').remove()
+
+            //Create element
+            let messageElement = document.createElement('div')
+            let header = document.createElement('h5')
+
+            //Modify element
+            header = "Today your focus is"
+            messageElement.style.opacity = 0
+            messageElement.style.transition = 'opacity 1s'
+            messageElement.innerText = focusInputText
+
+            //Append element
+            messageElement.append(header)
+            focusInputContainer.append(messageElement)
+            setTimeout(() => {messageElement.style.opacity = 1})
+        }, 1000);
     }
 });
 
 
+//ADD LIST ITEM FOR TODO
+// instead of strings, use objects
+/*
+    [
+        'walk the dog',
+        'do the dishes',
+    ]
+
+    [
+        {
+            text: "walk the dog",
+            status: "completed" | "deleted" | undefined
+        },
+        {
+
+        }
+    ]
+*/
+//Show Todo
 
 closeBtn.addEventListener("click", hideTodos)
 
 
-todoBtn.addEventListener('click', toggleHideShow)
+todoBtn.addEventListener('click', ()=>{toggleHideShow(todoContainer)})
 
 
-//ADD LIST ITEM FOR TODO
-
-listOfTodo = []
-
-let todosFromLocalStorage = JSON.parse(localStorage.getItem('mytodolist'))
-
-
-
-if (todosFromLocalStorage) {
-    listOfTodo = todosFromLocalStorage
-    renderTodo()
+function showTodos() {todoContainer.style.display = 'inline'}
+function hideTodos() {todoContainer.style.display = 'none'}
+function toggleHideShow(container) {
+    if (container.style.display === "none"
+        || container.style.display === "") {
+        container.style.display = "block";
+      } else {
+        container.style.display = "none";
+      }
 }
 
+//Todo Functionality
+
+listOfTodo = []
+let todosFromLocalStorage = localStorage.getItem('mytodolist')
+if (todosFromLocalStorage) {
+    listOfTodo = JSON.parse(todosFromLocalStorage)
+    renderTodo()
+}
 
 todoInput.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         
-        listOfTodo.push(todoInput.value)
+        // listOfTodo.push(todoInput.value)
+        listOfTodo.push({
+            todoitem: todoInput.value,
+            all: true,
+            completed: false,
+            deleted: false,
+            id: Math.random()
+        })
         
         todoInput.value = "";
-
-        
-        localStorage.setItem("mytodolist", JSON.stringify(listOfTodo));
+        save('mytodolist')
         renderTodo();
         
         
     }
 });
 
+completeTab.addEventListener('click', () => {
+    renderTodo('completed')
+})
+
+deleteTab.addEventListener('click', () => {
+    renderTodo('deleted')
+})
+allTab.addEventListener('click', ()=>{
+    renderTodo()
+})
+// "all" | "completed" | "deleted"
+// let filteredTodos = listOfTodo.filter()
 
 
-function showTodos() {todoContainer.style.display = 'inline'}
-function hideTodos() {todoContainer.style.display = 'none'}
-function toggleHideShow() {
-    if (todoContainer.style.display === "none"
-        || todoContainer.style.display === "") {
-        todoContainer.style.display = "block";
-      } else {
-        todoContainer.style.display = "none";
-      }
-}
-function renderTodo() {
+function renderTodo(filter) {
+    // if (filter == "completed")
+    let filteredTodos = [...listOfTodo] // Make a copy of an array
+
+    //Just filter the copy, because we dont want to lose the original array
+    if(filter == "completed") {
+        filteredTodos = listOfTodo.filter(todo => todo.completed)
+    } else if (filter == 'deleted') {
+        filteredTodos = listOfTodo.filter(todo => todo.deleted)
+    } else {
+        filteredTodos = listOfTodo.filter(todo => !todo.deleted)
+    }
     todoListElement.innerHTML = ""
-    listOfTodo.forEach((item, i) => {
+    filteredTodos.forEach((item, i) => {
         // creating elements
         let li = document.createElement('li')
         let input = document.createElement('input')
         let p = document.createElement('p')
+        let deleteBtn = document.createElement('button')
+        let icon = document.createElement('i')
 
         //  modify elements
-        li.classList.add('checkbox')
+        li.classList.add('list-row')
         input.setAttribute('type', 'checkbox')
+        input.setAttribute('value', item.todoitem)
         input.id = "todo-"+i
-        p.innerText = item
-        input.addEventListener('click', ()=>{highlightCheckedOption(input, li)})
+        p.innerText = item.todoitem
+        if (item.completed) {
+            input.checked = 'on'
+            checkedOption(input, li, item)
+        }
+        input.addEventListener('click', ()=>{checkedOption(input, li, item)})
+        deleteBtn.classList.add('list-btn')
+        icon.classList.add('fa-x')
 
-        input.addEventListener("mouseover", () => showMore);
+        //Add eventlistener to delete btn
+        deleteBtn.addEventListener('click', () => {
+            // listOfTodo.splice(i, 1)
+            listOfTodo[i].deleted = true
+            save('mytodolist')
+            renderTodo()
+        })
+
         // appending elements
         li.append(input)
         li.append(p)
+        deleteBtn.append(icon)
+        li.append(deleteBtn)
         todoListElement.append(li)
     })
 
 }
 
-// todoContainer.addEventListener('click', highlightCheckedOption)
 
-function highlightCheckedOption(input, li) {
-    // document.getElementById(e.target.id).parentElement.classList.add('highlight')
-    // e.target.classList.toggle('highlight')
+function save(key) {
+    if (key !== 'mylinkslist' && key !== 'mytodolist') {
+        console.error(key + ' is an invalid key')
+        return
+    }
+   
+    let arrayToSave
+    if (key === 'mylinkslist') {
+        arrayToSave = listofLinks
+    } else arrayToSave = listOfTodo
+    localStorage.setItem(key, JSON.stringify(arrayToSave))
+}
+
+let listofCheckedItem = []
+
+
+function checkedOption(input, li, item) {
+    let i = listOfTodo.findIndex(todo => todo.id == item.id)
     if (input.checked) {
         li.classList.add('highlight')
-    } else {
-        li.classList.remove('highlight')
+        //Change complete boolean to true
+        listOfTodo[i].completed = true
     }
+    else {
+    li.classList.remove('highlight')
+        listOfTodo[i].completed = false
+    }
+    save('mytodolist')
 }
 
-function showMore() {
-
-}
 
 
-linksBtn.addEventListener('click', function() {
-    linksContainer.style.display = 'inline'
-})
+
+// Show Links
+
+
+linksBtn.addEventListener('click', () => {toggleHideShow(linksContainer)})
+
 
 linkscloseBtn.addEventListener('click', function() {
     linksContainer.style.display = 'none'
@@ -196,6 +297,7 @@ linkscloseBtn.addEventListener('click', function() {
 listofLinks = []
 
 let linksFromLocalStorage = localStorage.getItem('mylinkslist')
+
 
 if (linksFromLocalStorage) {
     listofLinks = JSON.parse(linksFromLocalStorage)
@@ -208,13 +310,16 @@ linksInput.addEventListener('keypress', function (e) {
         listofLinks.push(linksInput.value)
         linksInput.value = ""
 
-        localStorage.setItem('mylinkslist', JSON.stringify(listofLinks))
+        save('mylinkslist')
         
 
         renderLinks()
 
     }
-  }  ) 
+  }  )
+   
+  // Ternary expressons
+  // condition ? iftrue : else
 
 
 
@@ -224,15 +329,47 @@ function renderLinks() {
         //Create Element
         let li = document.createElement('li')
         let a = document.createElement('a')
+        let deleteBtn = document.createElement('button')
+        let icon = document.createElement('i')
 
         //Modify Element
-        li.id = "todo-"+i
+        li.id = "link-"+i
+        li.classList.add('list-row')
         a.textContent = item
+        a.setAttribute('href', item)
+        a.classList.add('a-links')
+        deleteBtn.classList.add('list-btn')
+        icon.classList.add('fa-x')
 
+        //Add Hover for li - Need some conditioning
+/* 
+        li.addEventListener('mouseover', () => {
+            const hoverId = li.id
+            if(hoverId) {
+                li.append(moreBtn)
+                moreBtn.append(icon)
+
+            } else {
+
+            }
+        }) */
+
+        //Add Click to moreBtn - remove list item
+        // ARRAY.splice(index, numberOfItemsToDelete, replacement*)
+
+        deleteBtn.addEventListener('click', () => {
+            listofLinks[i].deleted = true
+            save('mylinkslist')
+            renderLinks()
+        })
+
+        // console.log(localStorage.getItem())
 
         //Append Element
         li.append(a)
         linksElement.append(li)
+        deleteBtn.append(icon)
+        li.append(deleteBtn)
 
     })
 }

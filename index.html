@@ -22,7 +22,7 @@
                     <h3>Bookmarks</h3>
                     <i class="fa-duotone fa-x" id="links-close-btn" style="color:grey"></i>
                 </div>
-                <div class="links-content" id="links-content">
+                <div class="links-element" id="links-element">
                     <!-- Links goes here -->
                 </div>
                 <div class="links-footer">
@@ -43,8 +43,8 @@
             
 
             <div class="mainfocus-container">
-                <h5>What is your main focus today?</h5>
-                <input type="text" width="350px" id="focus-input">
+                <h5 id="focus-question">What is your main focus today?</h5>
+                <!-- <input type="text" width="350px" id="focus-input"> -->
             </div>
 
 
@@ -64,13 +64,17 @@
                     <i class="fa-duotone fa-x" id="close-btn" style="color:grey"></i>
                 </div>
                 <div class="todo-content" id="todo-content">
-                    <!-- Todo List goes here -->
                     <ul>
-                        
+                    <!-- Todo List goes here -->
                     </ul>
                 </div>
                 <div class="todo-footer">
                     <input type="text" placeholder="New Todo" class="todo-input" id="todo-input">
+                    <div class="footer-row">
+                        <button class="btn todo-footer-links" id="all-tab">All</button>
+                        <button class="btn todo-footer-links" id="complete-tab">Completed</button>
+                        <button class="btn todo-footer-links" id="delete-tab">Deleted</button>
+                    </div>
                 </div>
                
             </div>
